@@ -1,6 +1,7 @@
 import math
 import numpy as np
 
+
 class RocketParachuteCalculator:
     GRAVITY = 9.81
 
@@ -72,7 +73,7 @@ class RocketParachuteCalculator:
         - The radius of the parachute.
         """
         return circumference / (2 * math.pi)
-    
+
     def calc_circular_area(self, area_cd: float, drag_coefficient: float, hole_to_canopy_area_ratio: float) -> float:
         """
         Calculate the circular area of a selected section of the parachute.
@@ -89,7 +90,10 @@ class RocketParachuteCalculator:
         - The circular area of the selected parachute section in square meters.
         """
         return area_cd / drag_coefficient / (1 - hole_to_canopy_area_ratio)
-    
+
+    def calc_circular_diameter(self, circular_area_of_selected: float):
+        return math.sqrt(4*circular_area_of_selected/math.pi)
+
     def calc_ellipse_perimeter(self, a: float, b: float, terms: int = 10) -> float:
         """
         Calculate the perimeter of an ellipse using an infinite series approximation.
@@ -111,13 +115,12 @@ class RocketParachuteCalculator:
         sum_series = sum(((0.5 / n)**2 * (h**n) for n in range(1, terms + 1)))
         perimeter = math.pi * (a + b) * (1 + sum_series)
         return perimeter
-    
-    def calc_semi_ellipsoid_depth(self,radius,ratio_of_height_to_radius):
+
+    def calc_semi_ellipsoid_depth(self, radius, ratio_of_height_to_radius):
         np_radius = np.array(radius)
         np_ratio_of_height_to_radius = np.array(ratio_of_height_to_radius)
         depth = np.outer(np_radius, np_ratio_of_height_to_radius)
-        return depth
-    
+        return depth[0]
 
     def calc_length_of_curve(self, radius, semi_ellipsoid_depth, length_to_half_circumference_ratio):
         """
@@ -145,8 +148,23 @@ class RocketParachuteCalculator:
         """
         length_of_curve = 0.25 * length_to_half_circumference_ratio * \
             np.pi * (3 * (radius + semi_ellipsoid_depth) -
-                    np.sqrt((3 * radius + semi_ellipsoid_depth) * (radius + 3 * semi_ellipsoid_depth)))
+                     np.sqrt((3 * radius + semi_ellipsoid_depth) * (radius + 3 * semi_ellipsoid_depth)))
         return length_of_curve
-    
-    def calc_length_of_curve_without_hole(self,length_of_curve,hole_to_canopy_area_ratio):
+
+    def calc_length_of_curve_without_hole(self, length_of_curve, hole_to_canopy_area_ratio):
         return length_of_curve*(1-hole_to_canopy_area_ratio)
+
+    def calc_material_area_per_gore(self, side_length: float, length_of_curve_without_hole: float):
+        return 2*side_length*length_of_curve_without_hole/math.pi
+    
+    def calc_material_area_per_chute(self,number_of_gores_panels:float,material_area_per_gore:float):
+        return number_of_gores_panels*material_area_per_gore
+    
+    def calc_material_area_for_net(self,number_of_gores_panels:float,length_of_curve_without_hole,side_length):
+        return number_of_gores_panels*length_of_curve_without_hole*side_length
+    
+    def calc_mass_per_chute(self,material_area_per_chute,mass_per_unit_area):
+        return material_area_per_chute*mass_per_unit_area
+    
+    def calc_cost_per_chute(self,material_area_for_net,cost_per_unit_area):
+        return material_area_for_net*cost_per_unit_area

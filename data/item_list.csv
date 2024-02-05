@@ -1,0 +1,15 @@
+object,category,mass_per_unit,cost_per_unit,number,amount_per_pack,total_amount,sub_total,comment
+Ripstop nylon,fabric,,6,5.2,m^2,,267.4344727,148x100cm
+Parachute line,items,,5.48,2,15m,30m,10.96,30m per unit
+Small quick (chain) links,items,,8.8,3,2,6,3.5,2 per pack
+(Fishing) bearing swivels,items,,5.5,4,1,4,22,1000lb
+Cut proof tether,items,,6.85,2,1m,2,13.7,
+High strength paracord,items,,9.98,1,30m,30m,9.98,30m per unit
+Shock cord,items,,20,1,20m,20m,20,
+"Fireproof cloth, large",items,,12,2,1,2,24,12x12 in
+"Fireproof cloth, small",items,,10,2,1,2,20,9x9 in
+"Thimbles, 4mm",items,,2.48,2,4,8,4.96,
+Sewing thread,items,,0.1,0,m,,0,got it
+"Bridle, nylon cord",items,,,,,,0,find at spotlight
+Prototyping,misc,,0.1,0,m,,0,got it
+Leeway,misc,,,,,,0,find at spotlight
