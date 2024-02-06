@@ -1,13 +1,11 @@
-from sympy import symbols, lambdify, sqrt, exp, pi, cos
+from sympy import symbols, lambdify, exp, pi
 import numpy as np
 import math
 import triangle as tr
 
-from script.sahr_fin_flutter import P0
-
 # Define symbols in one central place
-cr, ct, b, h, T, G, t, P, a, AR, lambda_ratio, epsilon, cx, K,m = symbols(
-    'c_r c_t b h T G t P a AR lambda_ratio epsilon cx K m')
+cr, ct, b, h, T, G, t, P, a, AR, lambda_ratio, epsilon, cx, K,m,P0 = symbols(
+    'c_r c_t b h T G t P a AR lambda_ratio epsilon cx K m P0')
 
 # cx for trapezoidal fins
 cx_expr= ((2*ct*m)+ct**2+(m*cr)+(ct*cr)+cr**2)/(3*(ct+cr))
@@ -30,8 +28,8 @@ P_expr_Imperial = 14.696 * ((T_expr_Imperial + 459.7) / 518.7) ** 5.256
 
 
 # speed of sound = a
-a_expr_SI = 20.05*sqrt(273.16+T)
-a_expr_Imperial = 49.03*sqrt(459.7+T)
+a_expr_SI = 20.05*(273.16+T)**0.5
+a_expr_Imperial = 49.03*(459.7+T)**0.5
 
 # Epsilon
 epsilon_expr = (cx_expr/cr)-0.25
@@ -47,9 +45,10 @@ Term3_expr_Imperial = P_expr_Imperial/14.696
 
 
 # Fin flutter velocity expression
-Vf_expr_SI = a_expr_SI * sqrt(G / (Term1_expr)*(Term2_expr)*(Term3_expr_SI))
+Vf_expr_SI = a_expr_SI * \
+    (G / (Term1_expr)*(Term2_expr)*(Term3_expr_SI))**0.5
 Vf_expr_Imperial = a_expr_Imperial * \
-    sqrt(G / (Term1_expr)*(Term2_expr)*(Term3_expr_Imperial))
+    (G / (Term1_expr)*(Term2_expr)*(Term3_expr_Imperial))**0.5
 
 # Corrected lambdify functions
 temperature_function_SI = lambdify(h, T_expr_SI, modules='numpy')
@@ -69,9 +68,48 @@ cx_function = lambdify((cr, ct, m), cx_expr, modules='numpy')
 epsilon_function = lambdify((cr, ct, m), epsilon_expr, modules='numpy')
 
 flutter_velocity_function_SI = lambdify(
-    (G, cr, ct, b, t, m, P, K), Vf_expr_SI, modules='numpy')
+    (G, cr, ct, b, t, m, P, K), Vf_expr_SI, modules=[{"sqrt": np.sqrt}, "numpy", "math"])
 flutter_velocity_function_Imperial = lambdify(
-    (G, cr, ct, b, t, m, P, K), Vf_expr_Imperial, modules='numpy')
+    (G, cr, ct, b, t, m, P, K), Vf_expr_Imperial, modules=[{"sqrt": np.sqrt}, "numpy", "math"])
+
+
+def main():
+# Gather input parameters
+    print("Enter the following parameters for flutter velocity calculation:")
+
+    # cr_val = float(input("Root chord length (cr): "))
+    # ct_val = float(input("Tip chord length (ct): "))
+    # b_val = float(input("Span (b): "))
+    # h_val = float(input("Height (h): "))
+    # t_val = float(input("Thickness (t): "))
+    # m_val = float(input("Sweep Length(m): "))
+    # G_val = float(input("Shear modulus (G): "))
+    # K_val = float(input("Constant K: "))
+    # P0_val = float(input("Reference Pressure (P0): "))
+
+    cr_val = 7.5 #inch
+    ct_val = 2.5 #inch
+    b_val = 3 #inch
+    h_val = 4500 # ft
+    t_val = 0.1875 #inch
+    m_val = 4.285 #inch
+    G_val = 600000 # psi
+    K_val = 1.4
+    P0_val = 14.696
+
+    # Choose unit system
+    unit_system = 'imperial'
+
+    # Compute necessary intermediate values
+    temperature = (temperature_function_SI if unit_system == "si" else temperature_function_Imperial)(h_val)
+    pressure = (pressure_function_SI if unit_system == "si" else pressure_function_Imperial)(temperature)
+    speed_of_sound = (speed_of_sound_function_SI if unit_system == "si" else speed_of_sound_function_Imperial)(temperature)
+    
+    # Compute flutter velocity
+    flutter_velocity = (flutter_velocity_function_SI if unit_system == "si" else flutter_velocity_function_Imperial)(
+        G_val, cr_val, ct_val, b_val, t_val, m_val, pressure, K_val)
+
+    print(f"Computed Flutter Velocity ({'m/s' if unit_system == 'si' else 'ft/s'}): {flutter_velocity}")
 
 if __name__ == "__main__":
     main()  # Replace with your file path
