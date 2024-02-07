@@ -56,7 +56,7 @@ Vf_expr_Imperial = a*(G/(T1 * T2 * T3))**0.5
 temperature_function_SI = lambdify(h, T_expr_SI, modules='numpy')
 temperature_function_Imperial = lambdify(h, T_expr_Imperial, modules='numpy')
 
-pressure_function_SI = lambdify(h, P_expr_SI, modules='numpy')
+pressure_function_SI = lambdify(T, P_expr_SI, modules='numpy')
 pressure_function_Imperial = lambdify(T, P_expr_Imperial, modules='numpy')
 
 speed_of_sound_function_SI = lambdify(T, a_expr_SI, modules='numpy')
@@ -98,7 +98,9 @@ def evaluate_flutter_velocity(G_val, cr_val, ct_val, b_val, t_val, m_val, P_val,
         epsilon: epsilon_val
     })
     term2 = Term2_expr.subs({cr: cr_val, ct: ct_val})
-    term3 = Term3_expr_Imperial.subs({T: T_val, P: P_val})
+    # term3 = Term3_expr_Imperial.subs({T: T_val, P: P_val})
+    
+    term3 = Term3_expr_SI.subs({T: T_val, P: P_val})
     print(f"term1={term1}")
     print(f"term2={term2}")
     print(f"term3={term3}")
@@ -112,19 +114,20 @@ def evaluate_flutter_velocity(G_val, cr_val, ct_val, b_val, t_val, m_val, P_val,
 
 
 def main():
-    # Gather input parameters
-    cr_val = 7.5  # inch
-    ct_val = 2.5  # inch
-    b_val = 3.0  # inch
-    h_val = 4500.0+14000.0  # ft
-    t_val = 0.1875  # inch
-    m_val = 4.285  # inch
-    G_val = 600000.0  # psi
-    K_val = 1.4 # constant
-    P0_val = 14.696 # psi
-
+    
     # Choose unit system
-    unit_system = 'imperial'
+    unit_system = 'si'
+    # Gather input parameters
+    cr_val = 30.0  # cm based on unit system
+    ct_val = 10.0  # cm
+    b_val = 14.0  # cm
+    h_val = 0 + 3048.0  # meters
+    t_val = 0.4  # cm
+    m_val = 9.0  # inch or cm Sweep Length
+    G_val = 4136854  # psi or kPa
+    # G_val = 5000000.0  # notebook value
+    K_val = 1.4  # constant
+    P0_val = 14.696 if unit_system == "Imperial" else 101.325  # psi or kPa
 
     # Compute necessary intermediate values
     temperature = (temperature_function_SI if unit_system ==
