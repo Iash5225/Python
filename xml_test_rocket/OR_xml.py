@@ -32,7 +32,7 @@ def parse_xml(file_path):
 
 
 # Replace 'your_file_path.ork' with the path to your XML file
-file_path = r"project\xml_test_rocket\rocket.xml"
+file_path = r"C:\Users\iash.bashir\src\personal\Python\xml_test_rocket\rocket.xml"
 subcomponents_data = parse_xml(file_path)
 
 # # Print or process the extracted data

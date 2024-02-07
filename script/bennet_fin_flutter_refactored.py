@@ -46,11 +46,11 @@ Term3_expr_Imperial = P_expr_Imperial/14.696
 
 # Fin flutter velocity expression
 # Fin flutter velocity expression
-Vf_expr_SI = a_expr_SI * (G / (Term1_expr * Term2_expr * Term3_expr_SI))**0.5
+# Vf_expr_SI = a_expr_SI * (G / (Term1_expr * Term2_expr * Term3_expr_SI))**0.5
 # Vf_expr_Imperial = a_expr_Imperial * \
 #     (G / (Term1_expr * Term2_expr * Term3_expr_Imperial))**0.5
 
-Vf_expr_Imperial = a*(G/(T1 * T2 * T3))**0.5
+Vf_expr = a*(G/(T1 * T2 * T3))**0.5
 
 # Corrected lambdify functions
 temperature_function_SI = lambdify(h, T_expr_SI, modules='numpy')
@@ -69,10 +69,10 @@ taper_ratio_function = lambdify((cr, ct), lambda_expr, modules='numpy')
 cx_function = lambdify((cr, ct, m), cx_expr, modules='numpy')
 epsilon_function = lambdify((cr, ct, m), epsilon_expr, modules='numpy')
 
-flutter_velocity_function_SI = lambdify(
-    (G, cr, ct, b, t, m, P, K), Vf_expr_SI, modules='numpy')
+# flutter_velocity_function_SI = lambdify(
+#     (G, cr, ct, b, t, m, P, K), Vf_expr_SI, modules='numpy')
 flutter_velocity_function_Imperial = lambdify(
-    (G, cr, ct, b, t, m, P, K), Vf_expr_Imperial, modules='numpy')
+    (G, cr, ct, b, t, m, P, K), Vf_expr, modules='numpy')
 
 # Define a function to substitute and evaluate expressions
 
@@ -105,7 +105,7 @@ def evaluate_flutter_velocity(G_val, cr_val, ct_val, b_val, t_val, m_val, P_val,
     print(f"term2={term2}")
     print(f"term3={term3}")
 
-    vf_expr_evaluated = Vf_expr_Imperial.subs(
+    vf_expr_evaluated = Vf_expr.subs(
         {a: a_val, G: G_val, T1: term1, T2: term2, T3: term3})
     # Numerical evaluation
     vf_numerical = N(vf_expr_evaluated)
@@ -124,8 +124,8 @@ def main():
     h_val = 0 + 3048.0  # meters
     t_val = 0.4  # cm
     m_val = 9.0  # inch or cm Sweep Length
-    G_val = 4136854  # psi or kPa
-    # G_val = 5000000.0  # notebook value
+    # G_val = 4136854  # psi or kPa
+    G_val = 5000000.0  # notebook value
     K_val = 1.4  # constant
     P0_val = 14.696 if unit_system == "Imperial" else 101.325  # psi or kPa
 
