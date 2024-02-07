@@ -28,7 +28,8 @@ Term3_expr_SI = P_expr_SI / 101.325
 DN_expr = (24*epsilon_expr*K*P0)/np.pi
 Term1_expr = (DN_expr*AR_expr**3)/((thickness_ratio_expr**3)*(AR_expr+2))
 Term2_expr = (lambda_expr+1)/2
-Vf_expr_Imperial = a_expr_Imperial * (G / (Term1_expr * Term2_expr * Term3_expr_Imperial))**0.5
+Vf_expr_Imperial = a_expr_Imperial * \
+    (G / (Term1_expr * Term2_expr * Term3_expr_Imperial))**0.5
 Vf_expr_SI = a_expr_SI * (G / (Term1_expr * Term2_expr * Term3_expr_SI))**0.5
 
 # Lambdify functions
@@ -50,6 +51,8 @@ flutter_velocity_function = {
 }
 
 # Main function
+
+
 def main(unit_system):
     # Input parameters
     cr_val = 7.5  # inch or cm based on unit system
@@ -71,10 +74,15 @@ def main(unit_system):
     flutter_velocity = flutter_velocity_function[unit_system](
         G_val, cr_val, ct_val, b_val, t_val, m_val, pressure, K_val, P0_val, temperature)
 
-    print(f"Temperature: {temperature} {'Fahrenheit' if unit_system == 'Imperial' else 'Celsius'}")
-    print(f"Pressure: {pressure} {'psi' if unit_system == 'Imperial' else 'kPa'}")
-    print(f"Speed of Sound: {speed_of_sound} {'ft/s' if unit_system == 'Imperial' else 'm/s'}")
-    print(f"Flutter Velocity: {flutter_velocity} {'ft/s' if unit_system == 'Imperial' else 'm/s'}")
+    print(
+        f"Temperature: {temperature} {'Fahrenheit' if unit_system == 'Imperial' else 'Celsius'}")
+    print(
+        f"Pressure: {pressure} {'psi' if unit_system == 'Imperial' else 'kPa'}")
+    print(
+        f"Speed of Sound: {speed_of_sound} {'ft/s' if unit_system == 'Imperial' else 'm/s'}")
+    print(
+        f"Flutter Velocity: {flutter_velocity} {'ft/s' if unit_system == 'Imperial' else 'm/s'}")
+
 
 if __name__ == "__main__":
     main("Imperial")  # Change to "SI" for SI units
