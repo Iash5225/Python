@@ -1,0 +1,6 @@
+# Contents of scripts/__init__.py
+from .howard_fin_flutter import calculate_flutter_velocity as howard_cfv
+from .bennet_fin_flutter_refactored import compute_and_print_flutter_velocity as bennet_cfv
+from .sahr_fin_flutter import calculate_flutter_velocity as sahr_cfv, list_of_flutter_velocities
+from .data_handler import *
+from .recovery import RocketParachuteCalculator
