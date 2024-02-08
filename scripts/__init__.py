@@ -4,3 +4,4 @@ from .bennet_fin_flutter_refactored import compute_and_print_flutter_velocity as
 from .sahr_fin_flutter import calculate_flutter_velocity as sahr_cfv, list_of_flutter_velocities
 from .data_handler import *
 from .recovery import RocketParachuteCalculator
+from .parachute import calc_chute_diameter, list_of_chute_diameters, list_of_velocities

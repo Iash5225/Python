@@ -10,6 +10,8 @@ setup(
         # Examples:
         'numpy',
         'pandas',
+        'matplotlib',
+        'sympy'
     ],
     python_requires='>=3.6',  # Minimum version requirement of the package
     # You can also include other metadata such as:
