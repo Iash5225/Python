@@ -26,9 +26,14 @@ cd [Your project's root directory]
 ```
 
 2. Install the package using pip:
-
+For a regular installation:
 ```bash
 pip install .
+```
+
+For an editable installation (recommended for development):
+```bash
+pip install -e .
 ```
 
 This will install the package along with its required dependencies in your environment, allowing you to import and use modules from the scripts directory directly in your Python scripts or Jupyter notebooks.
