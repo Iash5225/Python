@@ -5,3 +5,4 @@ from .sahr_fin_flutter import calculate_flutter_velocity as sahr_cfv, list_of_fl
 from .data_handler import *
 from .recovery import RocketParachuteCalculator
 from .parachute import calc_chute_diameter, list_of_chute_diameters, list_of_velocities
+from .or_xml import create_dataframe_and_drop_duplicates, find_and_extract_elements,get_root
