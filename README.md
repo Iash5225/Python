@@ -1,45 +1,44 @@
 # Rocket Club Graphical Interface
 
 ## Description
-This web-based GUI is designed for the Rocket Club to easily visualize and analyze rocket flight data. Users can plot graphs based on CSV data, view flight profiles, motor thrust, and stability over time.
+This repository handles notebooks and scripts
 
 ## Features
 - Import CSV data files.
 - Plot various graphs: Flight Profile, Motor Thrust, Stability vs Time.
-- Interactive data visualization.
-- User-friendly web interface.
 
-## Setting up a virtual environment
+## Installation
 
-To ensure a consistent environment for all users, it's recommended to use a virtual environment. Here's how to set it up:
+This project can be installed directly from the source code to facilitate development and customization. Follow the steps below to install the package in your environment.
 
-1. Install virtualenv: `pip install virtualenv`
-2. Create a virtual environment: `virtualenv venv`
-3. Activate the virtual environment:
-- On Windows: `venv\Scripts\activate`
-- On Unix or MacOS: `source venv/bin/activate`
-- GitBash on Windows: `source venv/Scripts/activate`
-6. Once the virtual environment is activated, install the required packages: `pip install -r requirements.txt`
-- If on Windows you must install the following package manually with: `pip install waitress`
+### Prerequisites
 
-## How to Use - OnRead
+- Python 3.6 or higher
+- pip
 
-1. On Linux ```gunicorn mysite.wsgi:application``` to locally run the server
-2. On Windows ```waitress-serve --listen=127.0.0.1:8080 mysite.wsgi:application``` to locally run the server
+### Installing the Package
 
-## Examples
-[Include screenshots or examples of the tool in use]
+1. Clone the repository to your local machine:
 
-## Contributing
-We welcome contributions! Please read our contribution guidelines.
+```bash
+git clone [URL to your project repository]
+cd [Your project's root directory]
+```
 
-## Credits
-Thanks to [contributors names] and [third-party libraries used].
+2. Install the package using pip:
 
-## Contact
-For support or queries, contact us at [email].
+```bash
+pip install .
+```
 
-## License
+This will install the package along with its required dependencies in your environment, allowing you to import and use modules from the scripts directory directly in your Python scripts or Jupyter notebooks.
 
+### Usage
+After installation, you can start using the package by importing it into your Python scripts or Jupyter notebooks:
+
+```python
+from scripts import [module_name]
+```
+Replace [module_name] with the name of the module you wish to use from the scripts package.
 
 
