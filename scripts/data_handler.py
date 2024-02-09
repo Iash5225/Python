@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import math
 
 
 class DataHandler:
@@ -347,6 +348,29 @@ class DataHandler:
             self.filtered_ras_df.rename(columns=rename_cols, inplace=True)
 
     def convert_ras_units_to_SI(self) -> None:
+        """
+        Converts measurement units from imperial to SI units within the `ras_df` DataFrame.
+
+        This method updates the `ras_df` DataFrame in place, converting various imperial unit measurements
+        to their corresponding SI units. The conversions include weights from pounds to grams, lengths from
+        inches to millimeters and feet to meters, and velocities and accelerations from feet per unit time
+        to meters per unit time. The conversion factors are defined within the method for each measurement type.
+
+        The method assumes that the original measurements are stored in columns with '_imperial' suffixes
+        and updates the corresponding columns without the suffix to reflect the converted SI unit values.
+
+        Attributes updated:
+        - weight: Converts pounds to grams.
+        - thrust: Converts pounds to grams.
+        - drag_force: Converts pounds to grams.
+        - lift_force: Converts pounds to grams.
+        - cg_location: Converts inches to millimeters.
+        - cp_location: Converts inches to millimeters.
+        - total_acceleration, vertical_acceleration, horizontal_acceleration: Converts feet per second squared to meters per second squared.
+        - total_velocity, vertical_velocity, horizontal_velocity: Converts feet per second to meters per second.
+
+        Note: This method modifies the `ras_df` DataFrame in place and does not return any value.
+        """
         pounds_to_grams = 453.6
         inch_to_mm = 25.4
         feet_to_meter = 0.3048
@@ -372,5 +396,69 @@ class DataHandler:
             feet_to_meter
         self.ras_df["horizontal_velocity"] = self.ras_df["horizontal_velocity_imperial"] * \
             feet_to_meter
-        
+    
+    def calculate_stability_percentage(self,rocket_length:float,)->None:
+        """
+        Calculates the stability margin as a percentage of the rocket length for each entry in the DataFrame.
+
+        This method computes the stability margin percentage based on the center of pressure (cp_location)
+        and the center of gravity (cg_location) relative to the total length of the rocket. The stability
+        margin percentage is added as a new column to the DataFrame. The calculation is performed for data
+        stored in `merged_df` if `or_filepath` is not empty, and in `ras_df` if `ras_file_path` is not empty.
+
+        The stability margin percentage is calculated as:
+            ((cp_location - cg_location) / rocket_length) * 100
+
+        This provides a measure of how aerodynamically stable the rocket is, with higher percentages indicating
+        a greater margin of stability.
+
+        Parameters:
+        - rocket_length (float): The total length of the rocket in the same units as `cp_location` and `cg_location`.
+
+        Note:
+        - The method modifies `merged_df` and/or `ras_df` DataFrames in place by adding a new column
+        `stability_margin_percentage` that contains the calculated values.
+        - The method does not return any value.
+        """
+        if self.or_filepath != "":
+            self.merged_df["stability_margin_percentage"] = (
+                self.merged_df["cp_location"] - self.merged_df["cg_location"]) / rocket_length * 100
+
+        # if self.ras_cd_filepath != "":
+        #     self._read_RASAero_Mach_csv()
+        #     self.filter_mach_from_ras_csv()
+
+        if self.ras_file_path != "":
+            self.ras_df["stability_margin_percentage"] = (
+                self.ras_df["cp_location"] - self.ras_df["cg_location"]) / rocket_length * 100
+            
+    def round_to_increment(self,values:list[float], increment:float, direction:str):
+        """
+        Rounds a list of values to the nearest increment either up or down.
+
+        This function takes a list of floating-point numbers, a specified increment by which to round, 
+        and a direction ('up' or 'down') indicating whether to round towards higher or lower increments. 
+        It returns the rounded value according to the direction: the highest value in the list rounded up 
+        or the lowest value in the list rounded down to the nearest increment.
+
+        Parameters:
+        - values (list[float]): A list of floating-point numbers to be rounded.
+        - increment (float): The increment to which the values will be rounded.
+        - direction (str): The direction to round the values, either 'up' for rounding up or 'down' for rounding down.
+
+        Returns:
+        float: The rounded value according to the specified direction. For 'up', it's the maximum value in the list
+        rounded up to the nearest increment. For 'down', it's the minimum value in the list rounded down to the nearest increment.
+
+        Examples:
+        >>> round_to_increment([1.5, 2.3, 3.7], 0.5, 'up')
+        4.0
+        >>> round_to_increment([1.5, 2.3, 3.7], 1.0, 'down')
+        1.0
+        """
+        if direction == 'up':
+            return math.ceil(max(values) / increment) * increment
+        elif direction == 'down':
+            return math.floor(min(values) / increment) * increment
+            
         
