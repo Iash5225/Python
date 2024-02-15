@@ -70,7 +70,7 @@ class DataHandler:
         :type OUTPUT_FILE_PATH: str
         """
 
-        df = self.filtered_ras_df[["Mach", "CD"]]
+        df = self.filtered_ras_df[["mach_number", "drag_coefficient"]]
 
         # Export the DataFrame as a tab-delimited text file
         df.to_csv(OUTPUT_FILE_PATH, sep="\t", index=False)
